@@ -1,0 +1,21 @@
+# Diretórios de Dependências e Build
+node_modules
+dist
+build
+temp
+tmp
+
+# Segredos e Configurações
+.env
+.venv
+
+# Ferramentas e IDEs
+.git
+.gitignore
+.dockerignore
+.vscode
+.idea
+
+# Logs e Dados
+*.log
+npm-debug.log
