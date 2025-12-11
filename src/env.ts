@@ -1,9 +1,17 @@
-import { z } from 'zod'
-import 'dotenv/config'
+import { z } from 'zod';
 
 const envSchema = z.object({
-  DATABASE_URL: z.string().url(), // Valida que DATABASE_URL é uma URL válida
-  PORT: z.coerce.number().default(3000), // Converte a variável para número e define padrão 3000
-})
+  NODE_ENV: z.enum(['dev', 'test', 'production']).default('dev'),
+  DATABASE_URL: z.string().url(),
+  PORT: z.coerce.number().default(3333),
+  FRONTEND_URL: z.string().url({ message: 'A URL do front-end deve ser uma URL válida.' }),
+});
 
-export const env = envSchema.parse(process.env)
+const _env = envSchema.safeParse(process.env);
+
+if (!_env.success) {
+  console.error('❌ Variáveis de ambiente inválidas:', _env.error.format());
+  throw new Error('Variáveis de ambiente inválidas.');
+}
+
+export const env = _env.data;
