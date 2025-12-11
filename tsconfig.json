@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    // Target & Module
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // Libs
+    "lib": ["ES2024"],
+    "types": ["node"],
+
+    // Paths (agora correto)
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    // Output
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Strict options
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Import behavior
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+
+    // Performance
+    "skipLibCheck": true
+  },
+
+  // Inclui a pasta src no build
+  "include": ["src"]
+}

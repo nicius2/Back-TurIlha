@@ -1,25 +1,10 @@
-version: "3.8"
-
 services:
-  app:
-    container_name: turilha_app
-    build:
-      context: .      
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      DATABASE_URL: postgresql://turilha_user:turilha_password@postgresql:5432/turilha_db
-    depends_on:
-      - postgresql
-    restart: unless-stopped
-
   postgresql:
     image: bitnami/postgresql:latest
     container_name: postgresql_turilha
     environment:
       POSTGRES_USER: turilha_user
-      POSTGRES_PASSWORD: turilha_password
+      POSTGRES_PASSWORD: trilhinha-paulino-neves-campos
       POSTGRES_DB: turilha_db
     ports:
       - "5432:5432"

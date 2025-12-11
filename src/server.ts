@@ -1,9 +1,9 @@
-import { app } from "./app";
-import { env } from "./env";
+import { app } from './app'
+import { env } from './env'
 
-const PORT = env.PORT;
+const PORT = env.PORT
 
 app.listen(PORT, () => {
-     console.log(` 🔥 Server is running with success `)
-     console.log(` 🚀  Server listening on port http://localhost:${PORT} `)
+  console.log(` 🔥 Server is running with success `)
+  console.log(` 🚀  Server listening on port http://localhost:${PORT} `)
 })

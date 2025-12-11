@@ -1,0 +1,12 @@
+# Exclui a pasta de dependências
+node_modules/
+
+# Exclui pastas de build
+dist/
+build/
+coverage/
+
+# Exclui arquivos de configuração compilados ou seeds
+*.js
+!*.config.js
+prisma/
