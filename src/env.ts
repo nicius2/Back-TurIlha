@@ -5,6 +5,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   PORT: z.coerce.number().default(3333),
   FRONTEND_URL: z.string().url({ message: 'A URL do front-end deve ser uma URL válida.' }),
+  JWT_SECRET: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);
