@@ -21,7 +21,5 @@ export function errorHandling(
             }))
           })
      }
-
-     console.log('Middleware ativo')
      return response.status(500).json({message: "Internal Server Error"})
 }
