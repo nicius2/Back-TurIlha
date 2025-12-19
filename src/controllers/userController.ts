@@ -1,20 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
-import { prisma } from '../database/prisma';
-import { AppError } from '../utils/AppError';
-import { env } from '../env';
+import { prisma } from '@/database/prisma';
+import { AppError } from '@/utils/AppError';
 
 const registerSchema = z.object({
   name: z.string().min(3, 'O nome é obrigatório.'),
   email: z.string().email('Formato de e-mail inválido.'),
   password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres.'),
-});
-
-const loginSchema = z.object({
-  email: z.string().email('Formato de e-mail inválido.'),
-  password: z.string().min(1, 'A senha é obrigatória.'),
+  confirmPassword: z.string().min(1, 'A confirmação de senha é obrigatória.'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'As senhas não coincidem.',
+  path: ['confirmPassword'],
 });
 
 class UserController {
@@ -29,50 +26,23 @@ class UserController {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-
+      
       const user = await prisma.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-        },
-      });
-
-      const { password: _, ...userWithoutPassword } = user;
-
-      return response.status(201).json({ user: userWithoutPassword });
+          data: {
+              name,
+              email,
+              password: hashedPassword,
+            },
+          });
+          
+          const { password: _, ...userWithoutPassword } = user;
+          
+          return response.status(201).json({ user: userWithoutPassword });
     } catch (error) {
       next(error);
     }
   }
 
-  async login(request: Request, response: Response, next: NextFunction) {
-    try {
-      const { email, password } = loginSchema.parse(request.body);
-
-      const user = await prisma.user.findUnique({ where: { email } });
-
-      if (!user) {
-        throw new AppError(401, 'Credenciais inválidas.');
-      }
-
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-
-      if (!isPasswordValid) {
-        throw new AppError(401, 'Credenciais inválidas.');
-      }
-
-      const token = jwt.sign({ id: user.id, role: user.role }, env.JWT_SECRET, {
-        expiresIn: '1d',
-      });
-
-      const { password: _, ...userWithoutPassword } = user;
-
-      return response.json({ user: userWithoutPassword, token });
-    } catch (error) {
-      next(error);
-    }
-  }
 }
 
 export { UserController };
