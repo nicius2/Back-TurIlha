@@ -22,7 +22,7 @@ class SessionController {
         throw new AppError(401, "Email ou Senha Invalida");
       }
 
-      const passwordCompare = await bcrypt.compare(password, user.password);
+      const passwordCompare = await bcrypt.compare(password, user.password || "");
 
       if (!passwordCompare) {
         throw new AppError(401, "Email ou Senha Invalida ");

@@ -1,11 +1,13 @@
+version: '3.8' # Boa prática definir a versão, embora opcional em versões recentes
+
 services:
   postgresql:
     image: bitnami/postgresql:latest
     container_name: postgresql_turilha
     environment:
-      POSTGRES_USER: turilha_user
-      POSTGRES_PASSWORD: trilhinha-paulino-neves-campos
-      POSTGRES_DB: turilha_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:

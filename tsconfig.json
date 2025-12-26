@@ -7,7 +7,7 @@
 
     // Libs
     "lib": ["ES2024"],
-    "types": ["node"],
+    "types": ["node", "jest"],
 
     // Paths (agora correto)
     "baseUrl": ".",
