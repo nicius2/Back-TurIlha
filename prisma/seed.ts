@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { CardType, PrismaClient } from "../prisma/generated";
 import { PrismaPg } from "@prisma/adapter-pg";
 
