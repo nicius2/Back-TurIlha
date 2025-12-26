@@ -1,52 +1,40 @@
-# ===========================
-# 1. BUILDER
-# ===========================
-FROM node:20-alpine AS builder
+# --- Estágio 1: Base ---
+# Define a imagem base e configura o pnpm
+FROM node:20-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-USER root
-
-RUN npm install -g pnpm
-
+# --- Estágio 2: Dependências ---
+# Foca em baixar as dependências para cache
+FROM base AS deps
 WORKDIR /app
-
-# Somente dependências (melhor cache)
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm fetch
 
-# Copiar o restante do projeto (schema.prisma vem junto aqui)
+# --- Estágio 3: Builder ---
+# Instala todas as dependências e constrói o projeto
+FROM base AS builder
+WORKDIR /app
 COPY . .
+# Usa o cache do estágio 'deps' e instala tudo
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# Executa o script de build completo (prisma, tsc, tsc-alias)
+RUN pnpm run build
 
-RUN DATABASE_URL="postgresql://dummy:dummy@dummy:5432/dummy" npx prisma generate
-
-RUN pnpm tsc
-
-
-# ===========================
-# 2. RUNNER (PRODUÇÃO)
-# ===========================
-FROM node:20-alpine
-
-USER root
-RUN npm install -g pnpm
-
-# Criar usuário não-root (boa prática)
-# O node:20-alpine já vem com o usuário 'node', podemos usar ele ou manter o 1001
-USER 1001
-
+# --- Estágio 4: Produção (Runner) ---
+# Cria a imagem final, enxuta e otimizada
+FROM base AS production
 WORKDIR /app
 
-# Copiar os artefatos do builder
-COPY --from=builder /app/dist ./dist
+# Copia os artefatos do estágio 'builder'
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/dist ./dist
 
-# ⚠️ IMPORTANTE: Copiar o node_modules do builder é o jeito mais fácil
-# de garantir que o Prisma Client gerado venha junto.
-COPY --from=builder /app/node_modules ./node_modules
+# Instala apenas as dependências de produção
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
+# Expõe a porta e define o comando de inicialização
 EXPOSE 3000
-
-# No CMD, não precisamos gerar de novo se já copiamos o node_modules,
-# mas manter o 'migrate deploy' aqui é arriscado em serverless.
-# Vamos manter simples:
 CMD ["pnpm", "start"]
