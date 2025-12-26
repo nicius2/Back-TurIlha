@@ -16,12 +16,8 @@ RUN pnpm install --frozen-lockfile
 # Copiar o restante do projeto (schema.prisma vem junto aqui)
 COPY . .
 
-# ✅ CORREÇÃO: Gerar o Prisma Client AQUI.
-# Isso cria os arquivos em node_modules/@prisma/client.
-# Não precisa de conexão com banco, só do schema.prisma.
-RUN npx prisma generate
+RUN DATABASE_URL="postgresql://dummy:dummy@dummy:5432/dummy" npx prisma generate
 
-# 🔹 Compilar TypeScript (Agora vai funcionar pois o client existe)
 RUN pnpm tsc
 
 
