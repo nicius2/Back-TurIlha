@@ -5,7 +5,7 @@
   "type": "",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npx prisma generate && tsc",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "test": "jest",
@@ -19,7 +19,6 @@
   "packageManager": "pnpm@10.24.0",
   "dependencies": {
     "@prisma/adapter-pg": "^7.1.0",
-    "@prisma/cli": "^2.20.1",
     "@prisma/client": "^7.1.0",
     "axios": "^1.13.2",
     "bcrypt": "^5.1.1",
@@ -51,7 +50,6 @@
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "jest-mock-extended": "^4.0.0",
-    "npm": "^11.3.0",
     "prisma": "^7.1.0",
     "supertest": "^7.1.0",
     "ts-jest": "^29.2.5",
