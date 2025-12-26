@@ -2,11 +2,12 @@
   "name": "Back-TurIlha",
   "version": "1.0.0",
   "description": "",
-  "type": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "prisma generate && tsc",
+    "start": "node dist/server.js",
+    "test": "jest",
     "db:seed": "prisma db seed",
     "seed": "tsx prisma/seed.ts",
     "seed:dev": "dotenv -e .env -- tsx prisma/seed.ts"
