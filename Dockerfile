@@ -13,13 +13,15 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-# Copiar o restante do projeto
+# Copiar o restante do projeto (schema.prisma vem junto aqui)
 COPY . .
 
-# 🔹 NÃO GERAR O PRISMA CLIENT AQUI
-# (DATABASE_URL não existe no build)
+# ✅ CORREÇÃO: Gerar o Prisma Client AQUI.
+# Isso cria os arquivos em node_modules/@prisma/client.
+# Não precisa de conexão com banco, só do schema.prisma.
+RUN npx prisma generate
 
-# 🔹 Compilar TypeScript
+# 🔹 Compilar TypeScript (Agora vai funcionar pois o client existe)
 RUN pnpm tsc
 
 
@@ -30,17 +32,25 @@ FROM node:20-alpine
 
 USER root
 RUN npm install -g pnpm
+
+# Criar usuário não-root (boa prática)
+# O node:20-alpine já vem com o usuário 'node', podemos usar ele ou manter o 1001
 USER 1001
 
 WORKDIR /app
 
-# Copiar somente o necessário
+# Copiar os artefatos do builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/prisma ./prisma
 
+# ⚠️ IMPORTANTE: Copiar o node_modules do builder é o jeito mais fácil
+# de garantir que o Prisma Client gerado venha junto.
+COPY --from=builder /app/node_modules ./node_modules
+
 EXPOSE 3000
 
-# 🔹 Gerar Prisma Client + executar o app
-CMD sh -c "pnpm prisma generate && pnpm start"
+# No CMD, não precisamos gerar de novo se já copiamos o node_modules,
+# mas manter o 'migrate deploy' aqui é arriscado em serverless.
+# Vamos manter simples:
+CMD ["pnpm", "start"]
