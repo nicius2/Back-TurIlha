@@ -1,29 +1,23 @@
 # --- Estágio 1: Base ---
-# Define a imagem base e configura o pnpm
 FROM node:20-alpine AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN npm install -g pnpm
 
-# --- Estágio 2: Dependências ---
-# Foca em baixar as dependências para cache
-FROM base AS deps
-WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm fetch
-
-# --- Estágio 3: Builder ---
-# Instala todas as dependências e constrói o projeto
+# --- Estágio 2: Builder ---
 FROM base AS builder
 WORKDIR /app
+
+# Copia primeiro os arquivos de manifesto de dependência
+COPY package.json pnpm-lock.yaml ./
+# Instala TODAS as dependências (dev e prod) para o build
+RUN pnpm install --frozen-lockfile
+
+# Copia o restante do código-fonte (respeitando o .dockerignore)
 COPY . .
-# Usa o cache do estágio 'deps' e instala tudo
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-# Executa o script de build completo (prisma, tsc, tsc-alias)
+
+# Executa o script de build completo
 RUN pnpm run build
 
-# --- Estágio 4: Produção (Runner) ---
-# Cria a imagem final, enxuta e otimizada
+# --- Estágio 3: Produção (Runner) ---
 FROM base AS production
 WORKDIR /app
 
@@ -31,9 +25,8 @@ WORKDIR /app
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/dist ./dist
-
-# Instala apenas as dependências de produção
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+# Copia a node_modules de produção do builder
+COPY --from=builder /app/node_modules ./node_modules
 
 # Expõe a porta e define o comando de inicialização
 EXPOSE 3000

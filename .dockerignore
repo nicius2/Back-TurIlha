@@ -8,6 +8,8 @@ tmp
 # Segredos e Configurações
 .env
 .venv
+turilha-firebase-adminsdk.json # Adicionado para segurança
+*.pem
 
 # Ferramentas e IDEs
 .git
@@ -19,3 +21,4 @@ tmp
 # Logs e Dados
 *.log
 npm-debug.log
+.eslintcache
