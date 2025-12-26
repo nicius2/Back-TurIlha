@@ -1,14 +1,18 @@
 import admin from 'firebase-admin';
-import type { ServiceAccount } from 'firebase-admin'; 
+import type { ServiceAccount } from 'firebase-admin';
 
-if(!process.env.FIREBASE_SERVICE_ACCOUNT) {
+// Verifica a variável
+if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
   throw new Error('A variável FIREBASE_SERVICE_ACCOUNT não está definida.');
 }
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+// ✅ ADICIONE ISSO: Verifica se já não existe uma instância rodando
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
 
 export const firebaseAdmin = admin;
