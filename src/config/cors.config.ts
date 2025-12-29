@@ -1,16 +1,15 @@
 import cors, { CorsOptions } from 'cors'
+import { env } from "@/env";
 
-// const allowedOrigins = process.env.FRONTEND_URL;
+const allowedOrigins = env.FRONTEND_URL;
 
-// if (!allowedOrigins) {
-//     console.error("ERRO DE CONFIGURAÇÃO: FRONTEND_URL não está definido. Verifique seu arquivo .env.");
-//     // Em produção, você poderia lançar um erro ou usar uma lista estrita vazia
-// }
+if (!allowedOrigins) {
+    console.error("ERRO DE CONFIGURAÇÃO: FRONTEND_URL não está definido. Verifique seu arquivo .env.");
+    // Em produção, você poderia lançar um erro ou usar uma lista estrita vazia
+}
 
 export const corsCOnfig: CorsOptions = {
-     origin: [
-        "https://turilha.vercel.app"
-     ],
+     origin: allowedOrigins,
      credentials: true,
 
      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
