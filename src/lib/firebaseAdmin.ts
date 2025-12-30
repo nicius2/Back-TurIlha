@@ -1,17 +1,14 @@
 import admin from 'firebase-admin';
 import type { ServiceAccount } from 'firebase-admin';
+import serviceAccount from "../../turilha-firebase-adminsdk.json"; // Importa o JSON como um objeto
 
-// Verifica a variável
-if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
-  throw new Error('A variável FIREBASE_SERVICE_ACCOUNT não está definida.');
-}
+// Converte o JSON importado para o tipo ServiceAccount
+const firebaseConfig = serviceAccount as ServiceAccount;
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-
-// ✅ ADICIONE ISSO: Verifica se já não existe uma instância rodando
+// ✅ Verifica se já não existe uma instância rodando
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(firebaseConfig),
   });
 }
 

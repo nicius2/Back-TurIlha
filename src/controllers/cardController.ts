@@ -8,7 +8,7 @@ class CardController {
         orderBy: [{ createdAt: "desc" }],
       });
 
-      console.log('🔥 Requisição de todos os cards')
+      // console.log('🔥 Requisição de todos os cards')
       return response.status(200).json({
         success: true,
         cards,
@@ -26,7 +26,7 @@ class CardController {
         }
       })
 
-      console.log('🔥 Requisição de cards -> Paisagens')
+      // console.log('🔥 Requisição de cards -> Paisagens')
       return response.status(200).json({
         success: true,
         cardsPaisagens,
@@ -44,7 +44,7 @@ class CardController {
         }
       })
 
-      console.log('🔥 Requisição de cards -> eventos')
+      // console.log('🔥 Requisição de cards -> eventos')
       return response.status(200).json({
         success: true,
         cardsEvent,
@@ -61,7 +61,7 @@ class CardController {
         }
       })
 
-      console.log('🔥 Requisição de cards -> Restaurantes')
+      // console.log('🔥 Requisição de cards -> Restaurantes')
       return response.status(200).json({
         success: true,
         cardsRestaurant,

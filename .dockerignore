@@ -8,8 +8,7 @@ tmp
 # Segredos e Configurações
 .env
 .venv
-turilha-firebase-adminsdk.json # Adicionado para segurança
-*.pem
+turilha-firebase-adminsdk.json
 
 # Ferramentas e IDEs
 .git
