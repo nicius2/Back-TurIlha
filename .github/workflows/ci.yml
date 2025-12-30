@@ -2,12 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches:
-      - main
-      - development
+    branches: [main, development]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
@@ -20,20 +17,22 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20 # Certifique-se de usar uma versão compatível com o Prisma
+          node-version: 20
           cache: 'pnpm'
 
-      - name: Set up environment variables
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Set ENV variables
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > turilha-firebase-adminsdk.json
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
-
-      - name: Set Firebase Service Account
-        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > turilha-firebase-adminsdk.json
 
       - name: Build project
         run: pnpm build
