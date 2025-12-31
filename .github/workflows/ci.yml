@@ -45,3 +45,8 @@ jobs:
 
       - name: Run tests
         run: pnpm test
+
+      - name: Railway deploy
+        run: |
+          npm install -g railway
+          railway up --token ${{ secrets.RAILWAY_TOKEN }}
