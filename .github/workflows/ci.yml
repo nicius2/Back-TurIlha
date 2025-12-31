@@ -48,5 +48,7 @@ jobs:
 
       - name: Railway deploy
         run: |
-          npm install -g railway
-          railway up --token ${{ secrets.RAILWAY_TOKEN }}
+          npm install -g @railway/cli
+          railway up --service back-turilha --environment production
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
