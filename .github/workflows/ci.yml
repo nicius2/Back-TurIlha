@@ -28,14 +28,14 @@ jobs:
           version: 9
           run_install: false
 
+      - name: Set up environment variables
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: pnpm install
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
-
-      - name: Set up environment variables
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
 
       - name: Set Firebase Service Account
         run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > turilha-firebase-adminsdk.json
