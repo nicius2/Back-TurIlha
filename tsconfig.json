@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    // Imports
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
     // Target & Module
     "target": "ES2023",
     "module": "NodeNext",
@@ -9,13 +14,14 @@
     "lib": ["ES2024"],
     "types": ["node", "jest"],
 
-    // Paths (agora correto)
+    // Paths
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
 
     // Output
+    "outDir": "./dist",
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
@@ -34,6 +40,5 @@
     "skipLibCheck": true
   },
 
-  // Inclui a pasta src no build
   "include": ["src"]
 }

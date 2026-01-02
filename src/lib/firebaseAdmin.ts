@@ -1,18 +1,21 @@
 import admin from 'firebase-admin';
+import type { ServiceAccount } from 'firebase-admin';
+import "dotenv/config";
+import { env } from '@/env';
 
-import 'dotenv/config';
+// Converte o JSON importado para o tipo ServiceAccount
+const firebaseConfigRaw = env.FIREBASE_SERVICE_ACCOUNT;
 
-if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
-  throw new Error(
-    'A variável de ambiente FIREBASE_SERVICE_ACCOUNT não está definida.',
-  );
+if (!firebaseConfigRaw) {
+  throw new Error('FIREBASE_CONFIG environment variable is not set.');
 }
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+const firebaseConfig = JSON.parse(firebaseConfigRaw) as ServiceAccount;
 
+// ✅ Verifica se já não existe uma instância rodando
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert(firebaseConfig),
   });
 }
 

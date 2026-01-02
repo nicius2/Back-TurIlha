@@ -1,6 +1,7 @@
 import cors, { CorsOptions } from 'cors'
+import { env } from "@/env";
 
-const allowedOrigins = process.env.FRONTEND_URL;
+const allowedOrigins = env.FRONTEND_URL;
 
 if (!allowedOrigins) {
     console.error("ERRO DE CONFIGURAÇÃO: FRONTEND_URL não está definido. Verifique seu arquivo .env.");
