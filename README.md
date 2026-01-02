@@ -19,6 +19,7 @@ Este projeto foi construído com um conjunto moderno de tecnologias para garanti
 - **CORS**: Para gerenciar permissões de acesso de diferentes origens.
 - **tsx**: Para rodar a aplicação em TypeScript de forma otimizada em desenvolvimento.
 - **pnpm**: Gerenciador de pacotes rápido e eficiente.
+- **Jest**: Biblioteca para testes automatizados
 
 - CI/CD para rodar os testes unitarios, eslint e fazer deploy no railway  
 
