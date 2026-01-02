@@ -45,10 +45,3 @@ jobs:
 
       - name: Run tests
         run: pnpm test
-
-      - name: Railway deploy
-        run: |
-          npm install -g @railway/cli
-          railway up --service back-turilha --environment production
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
